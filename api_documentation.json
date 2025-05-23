@@ -1,0 +1,116 @@
+{
+  "donation_platform_api": {
+    "base_url": "http://localhost:5000/api",
+    "authentication": {
+      "method": "session-based",
+      "login": "POST /auth/login",
+      "register": "POST /auth/register", 
+      "logout": "POST /auth/logout"
+    },
+    "endpoints": {
+      "auth": {
+        "POST /auth/login": {
+          "body": {"username": "string", "password": "string"},
+          "response": {"user": "object", "message": "string"}
+        },
+        "POST /auth/register": {
+          "body": {"username": "string", "password": "string", "type": "Donor|Recipient"},
+          "response": {"message": "string"}
+        },
+        "POST /auth/logout": {
+          "auth_required": true,
+          "response": {"message": "string"}
+        },
+        "GET /auth/profile": {
+          "auth_required": true,
+          "response": {"user_profile": "object"}
+        }
+      },
+      "donor": {
+        "POST /donor/balance": {
+          "auth_required": true,
+          "body": {"amount": "number", "visa_number": "string"},
+          "response": {"new_balance": "number"}
+        },
+        "GET /donor/balance": {
+          "auth_required": true,
+          "response": {"balance": "number"}
+        },
+        "GET /donor/transactions": {
+          "auth_required": true,
+          "response": {"transactions": "array"}
+        },
+        "POST /donor/donate": {
+          "auth_required": true,
+          "body": {"request_id": "string", "amount": "number", "is_full_payment": "boolean"},
+          "response": {"amount_donated": "number", "request_fulfilled": "boolean"}
+        }
+      },
+      "recipient": {
+        "POST /recipient/requests": {
+          "auth_required": true,
+          "body": {"amount": "number", "priority_level": "1|2|3", "reason": "string", "case_details": "string"},
+          "response": {"request_id": "string"}
+        },
+        "GET /recipient/requests": {
+          "auth_required": true,
+          "response": {"requests": "array"}
+        }
+      },
+      "admin": {
+        "GET /admin/requests/pending": {
+          "admin_required": true,
+          "response": {"requests": "array"}
+        },
+        "POST /admin/requests/{id}/approve": {
+          "admin_required": true,
+          "response": {"message": "string"}
+        },
+        "POST /admin/requests/{id}/decline": {
+          "admin_required": true,
+          "response": {"message": "string"}
+        },
+        "GET /admin/requests/approved": {
+          "admin_required": true,
+          "response": {"requests": "array"}
+        },
+        "DELETE /admin/requests/approved/{id}": {
+          "admin_required": true,
+          "response": {"message": "string"}
+        },
+        "POST /admin/users/{id}/ban": {
+          "admin_required": true,
+          "response": {"message": "string"}
+        },
+        "GET /admin/donors/top": {
+          "admin_required": true,
+          "response": {"donors": "array"}
+        },
+        "POST /admin/staff/invite": {
+          "admin_required": true,
+          "body": {"user_id": "string"},
+          "response": {"message": "string"}
+        },
+        "POST /admin/staff/{id}/demote": {
+          "admin_required": true,
+          "response": {"message": "string"}
+        }
+      },
+      "public": {
+        "GET /requests/approved": {
+          "response": {"requests": "array"}
+        },
+        "GET /stats": {
+          "response": {"platform_statistics": "object"}
+        }
+      },
+      "staff": {
+        "POST /staff/invite/respond": {
+          "auth_required": true,
+          "body": {"accept": "boolean"},
+          "response": {"message": "string"}
+        }
+      }
+    }
+  }
+}
